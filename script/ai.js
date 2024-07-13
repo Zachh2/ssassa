@@ -1,47 +1,51 @@
-const axios = require("axios");
+const axios = require('axios');
 
 module.exports.config = {
-    name: "ai",
-    version: "1.0.0",
-    credits: "chill",
-    description: "Interact with Mixtral AI",
-    hasPrefix: false,
-    cooldown: 3,
-    aliases: ["mixtral"]
+  name: 'ai',
+  version: '1.0.0',
+  role: 0,
+  hasPrefix: false,
+  aliases: ['ai'],
+  description: "AI",
+  usage: "ai [prompt]",
+  credits: 'churchill',
+  cooldown: 3,
 };
 
-module.exports.run = async function ({ api, event, args }) {
-    try {
-        let q = args.join(" ");
-        if (!q) {
-            return api.sendMessage("Please provide a question. For example: ai what is your name?", event.threadID, event.messageID);
-        }
+module.exports.run = async function({ api, event, args }) {
+  const prompt = args.join(" ");
+  const userID = "100"; // Fixed uid
 
-        api.sendMessage("Mixtral answering, please wait...", event.threadID, async (err, info) => {
-            if (err) {
-                console.error("Error sending initial message:", err);
-                return api.sendMessage("An error occurred while processing your request.", event.threadID);
-            }
+  if (!prompt) {
+    api.sendMessage('Please provide a question.', event.threadID, event.messageID);
+    return;
+  }
 
-            try {
-                
-                const userInfo = await api.getUserInfo(event.senderID);
-                const senderName = userInfo[event.senderID].name;
+  api.sendMessage('🤖 𝐆𝐏𝐓𝟒 𝐂𝐎𝐍𝐓𝐈𝐍𝐔𝐄𝐒𝐒𝐒 𝐀𝐍𝐒𝐖𝐄𝐑𝐈𝐍𝐆𝐆 𝐏𝐋𝐒𝐒 𝐖𝐀𝐈𝐓...', event.threadID);
 
-        
-                const response = await axios.get(`https://joshweb.click/api/mixtral-8b?q=${encodeURIComponent(q)}`);
-                const answer = response.data.result;
+  const apiUrl = `https://markdevs69-1efde24ed4ea.herokuapp.com/gpt4?prompt=${encodeURIComponent(prompt)}&uid=${encodeURIComponent(userID)}`;
 
-                
-                const finalMessage = `${answer}\n\nAsked by: ${senderName}`;
-                api.sendMessage(finalMessage, event.threadID);
-            } catch (error) {
-                console.error("Error fetching AI response or user info:", error);
-                api.sendMessage("An error occurred while processing your request.", event.threadID);
-            }
-        });
-    } catch (error) {
-        console.error("Error in ai command:", error);
-        api.sendMessage("An error occurred while processing your request.", event.threadID);
-    }
+  try {
+    const response = await axios.get(apiUrl);
+    const result = response.data;
+    const aiResponse = result.gpt4;
+    const responseTime = new Date().toLocaleString('en-US', { timeZone: 'Asia/Manila', hour12: true });
+
+    // Fetch user's name from Facebook using their ID
+    api.getUserInfo(event.senderID, (err, ret) => {
+      if (err) {
+        console.error('Error fetching user info:', err);
+        api.sendMessage('Error fetching user info.', event.threadID, event.messageID);
+        return;
+      }
+
+      const userName = ret[event.senderID].name;
+      const formattedResponse = `🤖 𝐆𝐏𝐓𝟒+ 𝐂𝐎𝐍𝐓𝐈𝐍𝐔𝐄𝐒 𝐀𝐈\n━━━━━━━━━━━━━━━━━━\n${aiResponse}\n━━━━━━━━━━━━━━━━━━\n🗣 Asked by: ${userName}\n⏰ 𝑅𝑒𝑠𝑝𝑜𝑛𝑑 𝑇𝑖𝑚𝑒: ${responseTime}`;
+
+      api.sendMessage(formattedResponse, event.threadID, event.messageID);
+    });
+  } catch (error) {
+    console.error('Error:', error);
+    api.sendMessage('Error: ' + error.message, event.threadID, event.messageID);
+  }
 };
