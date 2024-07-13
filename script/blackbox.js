@@ -30,7 +30,15 @@ module.exports.run = async function({ api, event, args }) {
 
         const responseString = mapanghi.data ? mapanghi.data : JSON.stringify(mapanghi, null, 2);
 
-        api.sendMessage(responseString, event.threadID, event.messageID);
+        const formattedResponse = `
+📦 𝙱𝙾𝚇+ 𝙲𝙾𝙽𝚅𝙴𝚁𝚂𝙰𝚃𝙸𝙾𝙽𝙰𝙻
+━━━━━━━━━━━━━━━━━━
+${responseString}
+━━━━━━━━━━━━━━━━━━
+◉ -,-
+        `;
+
+        api.sendMessage(formattedResponse, event.threadID, event.messageID);
 
     } catch (error) {
         console.error('Error:', error);
