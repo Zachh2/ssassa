@@ -1,11 +1,11 @@
 module.exports.config = {
-    name: "avatarwibu",
+    name: "avatarv1",
     version: "1.0.0",
     role: 0,
     credits: "chill",
     description: "Generate an avatar image",
     hasPrefix: false,
-    aliases: ["avatar", "avwibu"],
+    aliases: ["avatarv1", "avwibu"],
     usage: "[avatarwibu <id> <name> <signature> <color>]",
     cooldown: 5
 };
