@@ -203,6 +203,7 @@ function buildAPI(globalOptions, html, jar) {
     'setMessageReaction',
     'setPostReaction',
     'setTitle',
+       'shareContact',
     'threadColors',
     'unsendMessage',
 
