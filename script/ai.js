@@ -30,10 +30,12 @@ module.exports.run = async function({ api, event, args }) {
   const apiUrl = `https://markdevs69-1efde24ed4ea.herokuapp.com/gpt4?prompt=${encodeURIComponent(prompt)}&uid=${encodeURIComponent(userID)}`;
 
   try {
+    const startTime = Date.now();
     const hot = await axios.get(apiUrl);
     const result = hot.data;
     const aiResponse = result.gpt4;
-    const responseTime = new Date().toLocaleString('en-US', { timeZone: 'Asia/Manila', hour12: true });
+    const endTime = Date.now();
+    const responseTime = ((endTime - startTime) / 1000).toFixed(2);
 
     api.getUserInfo(event.senderID, async (err, ret) => {
       if (err) {
@@ -43,7 +45,7 @@ module.exports.run = async function({ api, event, args }) {
       }
 
       const userName = ret[event.senderID].name;
-      const formattedResponse = `🤖 𝐆𝐏𝐓𝟒+ 𝐂𝐎𝐍𝐓𝐈𝐍𝐔𝐄𝐒 𝐀𝐈\n━━━━━━━━━━━━━━━━━━\n${aiResponse}\n━━━━━━━━━━━━━━━━━━\n🗣 Asked by: ${userName}\n⏰ 𝑅𝑒𝑠𝑝𝑜𝑛𝑑 𝑇𝑖𝑚𝑒: ${responseTime}`;
+      const formattedResponse = `🤖 𝐆𝐏𝐓𝟒+ 𝐂𝐎𝐍𝐓𝐈𝐍𝐔𝐄𝐒 𝐀𝐈\n━━━━━━━━━━━━━━━━━━\n${aiResponse}\n━━━━━━━━━━━━━━━━━━\n🗣 Asked by: ${userName}\n⏰ Respond Time: ${responseTime}s`;
 
       try {
         await api.editMessage(formattedResponse, chill.messageID);
