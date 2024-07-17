@@ -18,15 +18,27 @@ module.exports.run = async function ({ api, event, args }) {
     return api.sendMessage('Please provide a question.', event.threadID, event.messageID);
   }
 
-  api.sendMessage('Asking Claude your question, please wait...', event.threadID, event.messageID);
+  const initialMessage = await new Promise((resolve, reject) => {
+    api.sendMessage('Asking Claude your question, please wait...', event.threadID, (err, info) => {
+      if (err) return reject(err);
+      resolve(info);
+    });
+  });
 
   try {
     const response = await axios.get(`https://hiroshi-rest-api.replit.app/ai/claude?ask=${encodeURIComponent(question)}`);
     const answer = response.data.response;
 
-    api.sendMessage(`🧠 𝐶𝐿𝐴𝑈𝐷𝐸 𝐴𝐼\n━━━━━━━━━━━━━━━━━━\n${answer}\n━━━━━━━━━━━━━━━━━━`, event.threadID, event.messageID);
+    const formattedResponse = `
+🧠 𝐶𝐿𝐴𝑈𝐷𝐸 𝐴𝐼
+━━━━━━━━━━━━━━━━━━
+${answer}
+━━━━━━━━━━━━━━━━━━
+    `;
+
+    await api.editMessage(formattedResponse, initialMessage.messageID);
   } catch (error) {
     console.error(error);
-    return api.sendMessage('❌ | An error occurred while processing your request.', event.threadID, event.messageID);
+    await api.editMessage('❌ | An error occurred while processing your request.', initialMessage.messageID);
   }
 };
