@@ -16,8 +16,7 @@ module.exports.run = async function({ api, event, args }) {
     const bulag = args.join(' ');
 
     if (!bulag) {
-        api.sendMessage('Please provide a question, for example: blackbox what is the meaning of life?', event.threadID, event.messageID);
-        return;
+        return api.sendMessage('Please provide a question, for example: blackbox what is the meaning of life?', event.threadID, event.messageID);
     }
 
     const initialMessage = await new Promise((resolve, reject) => {
@@ -28,8 +27,8 @@ module.exports.run = async function({ api, event, args }) {
     });
 
     try {
-        const response = await axios.get('https://joshweb.click/blackbox', {
-            params: { prompt: bulag }
+        const response = await axios.get('https://joshweb.click/api/blackboxai', {
+            params: { q: bulag, uid: '100' }
         });
         const mapanghi = response.data;
 
