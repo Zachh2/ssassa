@@ -17,33 +17,26 @@ module.exports.run = async function ({ api, event, args }) {
             return api.sendMessage("[ ❗ ] - Missing question for the ai2", event.threadID, event.messageID);
         }
 
-        const initialMessage = await api.sendMessage("Answering plss wait...", event.threadID);
+        const initialMessage = await new Promise((resolve, reject) => {
+            api.sendMessage("Answering plss wait...", event.threadID, (err, info) => {
+                if (err) return reject(err);
+                resolve(info);
+            });
+        });
 
         try {
             const response = await axios.get(`https://joshweb.click/ai/llama-3-8b?q=${encodeURIComponent(q)}&uid=100`);
             const answer = response.data.result;
 
-            // Deleting the initial message
-            api.deleteMessage(initialMessage.messageID, (err) => {
-                if (err) {
-                    console.error("Failed to delete initial message:", err);
-                } else {
-                    // Sending the response message
-                    api.sendMessage(`👾 Iᒪᒪᗰᗩ\n━━━━━━━━━━━━━━━━━━\n${answer}\n━━━━━━━━━━━━━━━━━━`, event.threadID);
-                }
-            });
+            const formattedResponse = `👾 Iᒪᒪᗰᗩ\n━━━━━━━━━━━━━━━━━━\n${answer}\n━━━━━━━━━━━━━━━━━━`;
+
+            await api.editMessage(formattedResponse, initialMessage.messageID);
         } catch (error) {
             console.error(error);
-            api.deleteMessage(initialMessage.messageID, (err) => {
-                if (err) {
-                    console.error("Failed to delete initial message:", err);
-                } else {
-                    api.sendMessage("An error occurred while processing your request.", event.threadID);
-                }
-            });
+            await api.editMessage("An error occurred while processing your request.", initialMessage.messageID);
         }
     } catch (error) {
-        console.error("Error in lma command:", error);
+        console.error("Error in ai2 command:", error);
         api.sendMessage("An error occurred while processing your request.", event.threadID);
     }
 };
