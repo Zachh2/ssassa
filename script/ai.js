@@ -22,12 +22,19 @@ module.exports.run = async function({ api, event, args }) {
   }
 
   const chill = await new Promise(resolve => {
-    api.sendMessage('🤖 𝐆𝐏𝐓𝟒 𝐂𝐎𝐍𝐓𝐈𝐍𝐔𝐄𝐒𝐒𝐒 𝐀𝐍𝐒𝐖𝐄𝐑𝐈𝐍𝐆𝐆 𝐏𝐋𝐒𝐒 𝐖𝐀𝐈𝐓...', event.threadID, (err, info) => {
+    api.sendMessage('🤖 𝘎𝘗𝘛4 𝘈𝘕𝘚𝘞𝘌𝘙𝘐𝘕𝘎...', event.threadID, (err, info) => {
+      if (err) {
+        console.error('Error sending message:', err);
+        return;
+      }
+      api.setMessageReaction("⏳", info.messageID, (err) => {
+        if (err) console.error('Error setting reaction:', err);
+      });
       resolve(info);
     });
   });
 
-  const apiUrl = `https://markdevs69-1efde24ed4ea.herokuapp.com/gpt4?prompt=${encodeURIComponent(prompt)}&uid=${encodeURIComponent(userID)}`;
+  const apiUrl = `https://markdevs-last-api-as2j.onrender.com/gpt4?prompt=${encodeURIComponent(prompt)}&uid=${encodeURIComponent(userID)}`;
 
   try {
     const startTime = Date.now();
@@ -49,6 +56,9 @@ module.exports.run = async function({ api, event, args }) {
 
       try {
         await api.editMessage(formattedResponse, chill.messageID);
+        api.setMessageReaction("✅", chill.messageID, (err) => {
+          if (err) console.error('Error setting reaction:', err);
+        });
       } catch (error) {
         console.error('Error editing message:', error);
         api.sendMessage('Error editing message: ' + error.message, event.threadID, event.messageID);
