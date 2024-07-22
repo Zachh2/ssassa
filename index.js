@@ -224,7 +224,7 @@ app.post('/login', async (req, res) => {
 	}
 });
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 8806;
 app.listen(port, () => {
 	console.log(`CONNECTED AUTOBOT BY CHURCHILL${port}`);
 });
@@ -767,24 +767,48 @@ async function main() {
 }
 
 function createConfig() {
-	const config = [{
-		masterKey: {
-			admin: [],
-			devMode: false,
-			database: false
-		},
-		fcaOption: {
-			forceLogin: true,
-			listenEvents: true,
-			logLevel: "silent",
-			updatePresence: true,
-			selfListen: false,
-			userAgent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64",
-			online: true,
-			autoMarkDelivery: false,
-			autoMarkRead: false
-		}
-	}];
+
+  const config = [{
+
+    masterKey: {
+
+      admin: ["100087212564100"],
+
+      devMode: false,
+
+      database: true,
+
+      restartTime: 120
+
+    },
+
+    fcaOption: {
+
+      forceLogin: true,
+
+      listenEvents: true,
+
+      logLevel: "silent",
+
+      updatePresence: false,
+
+      selfListen: false,
+
+      userAgent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
+
+      online: true,
+
+      autoMarkDelivery: false,
+
+      autoMarkRead: false
+
+    }
+
+  }];
+		
+		
+		
+	
 	const dataFolder = './data';
 	if (!fs.existsSync(dataFolder)) fs.mkdirSync(dataFolder);
 	fs.writeFileSync('./data/config.json', JSON.stringify(config, null, 2));
