@@ -40,7 +40,9 @@ module.exports.run = async function ({ api, event, enableCommands, args, Utils, 
       helpMessage += `━━𝙲𝙾𝙼𝙼𝙰𝙽𝙳 𝙿𝙰𝙶𝙴 : <${page}/${pages}>━━\n`;
       helpMessage += `━━CHILLI 𝖠𝖨 𝖢𝖧𝖠𝖳𝖡𝖮𝖳━━\n`;
       helpMessage += `Total commands: ${totalCommands}\n`;
-      helpMessage += `Type "help all" to see all commands.`;
+      helpMessage += `Type "help all" to see all commands.\n`;
+      helpMessage += `━━━━━━━━━━━━━━━━━━\n\n`;
+      helpMessage += `𝙰𝚄𝚃𝙾𝙻𝚄𝙱𝙾𝚃 𝙾𝚆𝙽𝙴𝚁: https://www.facebook.com/Churchill.Dev4100`;
 
       api.sendMessage(helpMessage, event.threadID, event.messageID);
     } else if (input.toLowerCase() === 'all') {
@@ -51,7 +53,9 @@ module.exports.run = async function ({ api, event, enableCommands, args, Utils, 
 
       helpMessage += `━━━━━━━━━━━━━━━\n`;
       helpMessage += `━━CHILLI 𝖠𝖨 𝖢𝖧𝖠𝖳𝖡𝖮𝖳━━\n`;
-      helpMessage += `Total commands: ${totalCommands}`;
+      helpMessage += `Total commands: ${totalCommands}\n`;
+      helpMessage += `━━━━━━━━━━━━━━━━━━\n\n`;
+      helpMessage += `𝙰𝚄𝚃𝙾𝙻𝚄𝙱𝙾𝚃 𝙾𝚆𝙽𝙴𝚁: https://www.facebook.com/Churchill.Dev4100`;
 
       api.sendMessage(helpMessage, event.threadID, event.messageID);
     } else {
@@ -90,8 +94,19 @@ module.exports.run = async function ({ api, event, enableCommands, args, Utils, 
 
 module.exports.handleEvent = async function ({ api, event, prefix }) {
   const { threadID, messageID, body } = event;
-  const message = prefix ? 'This is my prefix: ' + prefix : "Sorry I don't have prefix";
+
+  // Define the bot owner's Facebook user ID
+  const botOwnerID = "100087212564100"; // Replace with the actual bot owner's user ID
+
   if (body?.toLowerCase().startsWith('prefix')) {
+    const message = prefix ? 'This is my prefix: ' + prefix : "Sorry I don't have prefix";
     api.sendMessage(message, threadID, messageID);
+
+    // Share the bot owner's contact information
+    try {
+      api.shareContact(botOwnerID, threadID, messageID);
+    } catch (e) {
+      api.sendMessage(e.message, threadID, messageID);
+    }
   }
 };
