@@ -16,14 +16,14 @@ module.exports.config = {
 
 module.exports.run = async function({ api, event }) {
     try {
-        // Check if there is an attachment
+        
         if (!event.messageReply || !event.messageReply.attachments || event.messageReply.attachments.length === 0) {
             return api.sendMessage("Please reply to an image with this command to enhance it.", event.threadID);
         }
 
         const attachment = event.messageReply.attachments[0];
 
-        // Only proceed if the attachment is an image
+        // mag procces lng pag may attachment
         if (attachment.type !== 'photo') {
             return api.sendMessage("Please reply to a valid image to enhance.", event.threadID);
         }
