@@ -22,9 +22,9 @@ module.exports.run = async function({ api, event, args }) {
 			return;
 		}
 
-		api.sendMessage("⏱️ | Searching, please wait...", event.threadID);
+		api.sendMessage("🤳 | Searching, please wait...", event.threadID);
 
-		const response = await axios.get(`https://markdevs69-1efde24ed4ea.herokuapp.com/api/tiksearch?search=${encodeURIComponent(searchQuery)}`);
+		const response = await axios.get(`https://markdevs-last-api-as2j.onrender.com/api/tiksearch?search=${encodeURIComponent(searchQuery)}`);
 
 		const videos = response.data.data.videos;
 
