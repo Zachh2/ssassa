@@ -1,4 +1,4 @@
-// Define the module configuration
+
 module.exports.config = {
     name: "fbcoverv6",
     version: "1.0.0",
@@ -17,16 +17,16 @@ const path = require("path");
 
 module.exports.run = async function({ api, event, args }) {
     try {
-        // Extract input parameters
+        
         const input = args.join(" ");
         const [name, gender, birthday, love, follower, location, hometown] = input.split(" | ");
 
-        // Validate input parameters
+        
         if (!name || !gender || !birthday || !love || !follower || !location || !hometown) {
             return api.sendMessage("Please provide all required parameters: fbcoverv6 name | gender | birthday | love | follower | location | hometown", event.threadID);
         }
 
-        // Get user's profile picture
+        
         const userProfileUrl = `https://graph.facebook.com/${event.senderID}/picture?type=large`;
         const profilePicPath = path.join(__dirname, "profilePic.jpg");
 
@@ -41,7 +41,7 @@ module.exports.run = async function({ api, event, args }) {
 
         writer.on('finish', async () => {
             try {
-                // Generate cover photo using the new API
+                
                 const apiUrl = `https://joshweb.click/canvas/fbcoverv7?uid=${event.senderID}&name=${encodeURIComponent(name)}&gender=${encodeURIComponent(gender)}&birthday=${encodeURIComponent(birthday)}&love=${encodeURIComponent(love)}&follower=${encodeURIComponent(follower)}&location=${encodeURIComponent(location)}&hometown=${encodeURIComponent(hometown)}`;
 
                 api.sendMessage("Generating Facebook cover photo, please wait...", event.threadID);
@@ -51,7 +51,7 @@ module.exports.run = async function({ api, event, args }) {
 
                 fs.writeFileSync(coverPhotoPath, response.data);
 
-                // Send cover photo to user
+            
                 api.sendMessage({
                     body: "Here is your customized Facebook cover photo:",
                     attachment: fs.createReadStream(coverPhotoPath)
