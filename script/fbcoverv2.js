@@ -1,4 +1,4 @@
-// Define the module configuration
+
 module.exports.config = {
     name: "fbcoverv2",
     version: "1.0.0",
