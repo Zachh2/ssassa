@@ -52,7 +52,14 @@ module.exports.run = async function({ api, event, args }) {
       }
 
       const userName = ret[event.senderID].name;
-      const formattedResponse = `🤖 𝐆𝐏𝐓𝟒+ 𝐂𝐎𝐍𝐓𝐈𝐍𝐔𝐄𝐒 𝐀𝐈\n━━━━━━━━━━━━━━━━━━\n${aiResponse}\n━━━━━━━━━━━━━━━━━━\n🗣 Asked by: ${userName}\n⏰ Respond Time: ${responseTime}s`;
+      const formattedResponse = `🤖 𝙶𝙿𝚃4+ 𝙲𝙾𝙽𝚃𝙸𝙽𝚄𝙴𝚂 𝙰𝙸
+━━━━━━━━━━━━━━━━━━
+${aiResponse}
+━━━━━━━━━━━━━━━━━━
+🗣 Asked by: ${userName}
+⏰ Respond Time: ${responseTime}s
+━━━━━━━━━━━━━━━━━━
+𝙸𝚏 𝚎𝚛𝚛𝚘𝚛 𝚃𝚛𝚢 𝚄𝚜𝚎 "𝙶𝙿𝚃4" 𝙲𝙼𝙳`;
 
       try {
         await api.editMessage(formattedResponse, chill.messageID);
