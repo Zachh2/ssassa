@@ -4,7 +4,7 @@ module.exports.config = {
     name: "ashley",
     version: "1.0.0",
     role: 0,
-    credits: "chilli", 
+    credits: "chilli",
     description: "Fetch a response from Ashley",
     hasPrefix: true,
     aliases: ["ashkey", "ash"],
@@ -22,8 +22,9 @@ module.exports.run = async function ({ api, event, args }) {
 
         const query = args.join(" ");
 
-        // Inform the user that the fetching process has started
-        api.sendMessage("𝙰𝚂𝙷𝙻𝙴𝚈 𝚃𝙰𝙻𝙺𝙸𝙽𝙶....", event.threadID);
+        // Inform the user that the fetching process has started and get the message ID
+        const messageInfo = await api.sendMessage("𝙰𝚂𝙷𝙻𝙴𝚈 𝚃𝙰𝙻𝙺𝙸𝙽𝙶....", event.threadID);
+        const messageID = messageInfo.messageID;
 
         // Fetch the response from the Ashley API
         const response = await axios.get(`https://markdevs-last-api-as2j.onrender.com/api/ashley?query=${encodeURIComponent(query)}`);
@@ -31,18 +32,18 @@ module.exports.run = async function ({ api, event, args }) {
 
         // Check if the response contains valid data
         if (!ashleyResponse) {
-            api.sendMessage("No response found from Ashley.", event.threadID);
+            await api.editMessage("No response found from Ashley.", event.threadID, messageID);
             return;
         }
 
         // Format the response message
         const message = `🔞 𝙰𝚂𝙷𝙻𝙴𝚈 𝙷𝙾𝚁𝙽𝚈 𝙰𝙸\n━━━━━━━━━━━━━━━━━━\n${ashleyResponse}\n━━━━━━━━━━━━━━━━━━\n-𝙰𝚂𝙷𝙻𝙴𝚈 𝚃𝙸𝙶𝙽𝙰𝙽 𝙼𝙾 𝙰𝙺𝙾`;
 
-        // Send the formatted message
-        api.sendMessage(message, event.threadID);
+        // Edit the initial message with the formatted response
+        await api.editMessage(message, event.threadID, messageID);
 
     } catch (error) {
         console.error('Error:', error);
-        api.sendMessage("An error occurred while processing the request.", event.threadID);
+        await api.editMessage("An error occurred while processing the request.", event.threadID, messageID);
     }
 };
