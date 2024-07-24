@@ -1,37 +1,60 @@
- module.exports.config = {
+module.exports.config = {
     name: "pinterest",
     version: "1.0.0",
     role: 0,
-    credits: "Joshua Sy",
-    description: "Image search",
+    credits: "chill",
+    description: "Send Pinterest pictures",
     hasPrefix: false,
-    commandCategory: "Search",
-    usages: "[Text]",
-    cooldowns: 0,
+    aliases: ["pin"],
+    usage: "[pin image - count]",
+    cooldown: 5
 };
+
+const axios = require("axios");
+const fs = require("fs");
+const path = require("path");
+
 module.exports.run = async function({ api, event, args }) {
-    const axios = require("axios");
-    const fs = require("fs-extra");
-    const request = require("request");
-    const keySearch = args.join(" ");
-    if(keySearch.includes("-") == false) return api.sendMessage('Please enter in the format, example: pinterest Coco Martin - 10 (20 limit only)', event.threadID, event.messageID)
-    const keySearchs = keySearch.substr(0, keySearch.indexOf('-'))
-    const numberSearch = keySearch.split("-").pop() || 6
-    const res = await axios.get(`https://gpt4withcustommodel.onrender.com/api/pin?title=${encodeURIComponent(keySearchs)}&count=20`);
-    const data = res.data.data;
-    var num = 0;
-    var imgData = [];
-    for (var i = 0; i < parseInt(numberSearch); i++) {
-      let path = __dirname + `/cache/${num+=1}.jpg`;
-      let getDown = (await axios.get(`${data[i]}`, { responseType: 'arraybuffer' })).data;
-      fs.writeFileSync(path, Buffer.from(getDown, 'utf-8'));
-      imgData.push(fs.createReadStream(__dirname + `/cache/${num}.jpg`));
-    }
-    api.sendMessage({
-        attachment: imgData,
-        body: numberSearch + 'Search results for keyword: '+ keySearchs
-    }, event.threadID, event.messageID)
-    for (let ii = 1; ii < parseInt(numberSearch); ii++) {
-        fs.unlinkSync(__dirname + `/cache/${ii}.jpg`)
+    try {
+        const input = args.join(" ");
+        const [query, countStr] = input.split(" - ");
+        let count = parseInt(countStr, 10);
+
+        if (!query || isNaN(count)) {
+            return api.sendMessage("Please provide a valid query usage: pin image - count (limit 9 count)", event.threadID);
+        }
+
+        count = Math.min(count, 19);
+
+        const apiUrl = `https://joshweb.click/api/pinterest?q=${encodeURIComponent(query)}`;
+        api.sendMessage(`Sending ${count} Pinterest pictures "${query}", please wait...`, event.threadID);
+
+        const response = await axios.get(apiUrl);
+        const images = response.data.result.slice(0, count);
+
+        if (images.length === 0) {
+            return api.sendMessage("No images found for the specified query.", event.threadID);
+        }
+
+        const attachments = [];
+
+        for (let i = 0; i < images.length; i++) {
+            const imageUrl = images[i];
+            const imagePath = path.join(__dirname, 'cache', `image${i}.jpg`);
+            const imageResponse = await axios.get(imageUrl, { responseType: 'arraybuffer' });
+            fs.writeFileSync(imagePath, imageResponse.data);
+            attachments.push(fs.createReadStream(imagePath));
+        }
+
+        api.sendMessage({
+            body: `Here are your ${count} Pinterest pictures:`,
+            attachment: attachments
+        }, event.threadID, () => {
+            attachments.forEach(stream => stream.close());
+            attachments.forEach(stream => fs.unlinkSync(stream.path));
+        });
+    } catch (error) {
+        console.error('Error:', error);
+        api.sendMessage("An error occurred while processing the request.", event.threadID);
     }
 };
