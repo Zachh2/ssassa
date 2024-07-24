@@ -5,8 +5,7 @@ const request = require("request");
 module.exports.config = {
 		name: "owner",
 		version: "1.0.1",
-		aliases: ["info", "Info
-		" owner", "in", "fo"],
+		aliases: ["owner"],
 		role: 0,
 		credits: "cliff",
 		description: "Admin and Bot info.",
