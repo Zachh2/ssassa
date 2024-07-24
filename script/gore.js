@@ -5,7 +5,7 @@ const path = require("path");
 module.exports.config = {
     name: "gore",
     version: "1.0.0",
-    role: 0,
+    role: 2,
     credits: "chill", 
     description: "Send a random gore video",
     hasPrefix: false,
