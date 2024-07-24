@@ -3,9 +3,10 @@ const moment = require("moment-timezone");
 const request = require("request");
 
 module.exports.config = {
-		name: "info",
+		name: "owner",
 		version: "1.0.1",
-		aliases: ["info", "Info", "in", "fo"],
+		aliases: ["info", "Info
+		" owner", "in", "fo"],
 		role: 0,
 		credits: "cliff",
 		description: "Admin and Bot info.",
