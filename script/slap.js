@@ -1,3 +1,7 @@
+const axios = require("axios");
+const fs = require("fs");
+const path = require("path");
+
 module.exports.config = {
     name: "slap",
     version: "1.0.0",
@@ -10,10 +14,6 @@ module.exports.config = {
     cooldown: 5
 };
 
-const axios = require("axios");
-const fs = require("fs");
-const path = require("path");
-
 module.exports.run = async function({ api, event }) {
     try {
         const mentions = Object.keys(event.mentions);
@@ -21,8 +21,8 @@ module.exports.run = async function({ api, event }) {
             return api.sendMessage("Please mention a user to be slapped.", event.threadID);
         }
 
-        const batmanId = event.senderID; // ID ng sender (Batman)
-        const robinId = mentions[0]; // ID ng mention (Robin)
+        const batmanId = event.senderID; // ID of the sender (Batman)
+        const robinId = mentions[0]; // ID of the mentioned user (Robin)
 
         const apiUrl = `https://hiroshi-rest-api.replit.app/canvas/batmanslap?batman=${batmanId}&robin=${robinId}`;
 
@@ -33,14 +33,24 @@ module.exports.run = async function({ api, event }) {
 
         fs.writeFileSync(slapImagePath, response.data);
 
-        api.sendMessage({
-            body: `${event.mentions[robinId]} has been slapped by Nognog!`,
-            mentions: [
-                { tag: event.mentions[robinId], id: robinId }
-            ],
-            attachment: fs.createReadStream(slapImagePath)
-        }, event.threadID, () => {
-            fs.unlinkSync(slapImagePath);
+        // Get user info for the sender
+        api.getUserInfo(batmanId, (err, ret) => {
+            if (err) {
+                api.sendMessage("An error occurred while fetching user info.", event.threadID);
+                return;
+            }
+
+            const batmanName = ret[batmanId].name;
+
+            api.sendMessage({
+                body: `${event.mentions[robinId]} has been slapped by ${batmanName}!`,
+                mentions: [
+                    { tag: event.mentions[robinId], id: robinId }
+                ],
+                attachment: fs.createReadStream(slapImagePath)
+            }, event.threadID, () => {
+                fs.unlinkSync(slapImagePath);
+            });
         });
     } catch (error) {
         console.error('Error:', error);
