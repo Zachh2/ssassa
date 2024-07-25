@@ -24,10 +24,10 @@ module.exports.run = async function({ api, event, args }) {
             return api.sendMessage("Please provide a valid query usage: pin image - count (limit 9 count)", event.threadID);
         }
 
-        count = Math.min(count, 19);
+        count = Math.min(count, 9);
 
         const apiUrl = `https://joshweb.click/api/pinterest?q=${encodeURIComponent(query)}`;
-        api.sendMessage(`Sending ${count} Pinterest pictures "${query}", please wait...`, event.threadID);
+        api.sendMessage(`Sending ${count} Pinterest pictures for "${query}", please wait...`, event.threadID);
 
         const response = await axios.get(apiUrl);
         const images = response.data.result.slice(0, count);
