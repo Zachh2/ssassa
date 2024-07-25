@@ -23,15 +23,22 @@ module.exports.run = async function({ api, event }) {
     }
     
     const mentions = event.mentions;
-    
-    if (Object.keys(mentions).length === 0) {
-      return api.sendMessage("Please mention the users you want to kick.", event.threadID, event.messageID);
+    let usersToKick = [];
+
+    if (event.messageReply) {
+      // Add the user who was replied to the list of users to kick
+      usersToKick.push(event.messageReply.senderID);
+    } else if (Object.keys(mentions).length > 0) {
+      // Add mentioned users to the list of users to kick
+      usersToKick = Object.keys(mentions);
+    } else {
+      return api.sendMessage("Please mention the users you want to kick or reply to their message.", event.threadID, event.messageID);
     }
-    
+
     let message = "Kicked the following users:\n\n";
-    for (const userID in mentions) {
+    for (const userID of usersToKick) {
       await api.removeUserFromGroup(userID, event.threadID);
-      message += `${mentions[userID]} (ID: ${userID})\n`;
+      message += `${userID}\n`;
     }
     
     api.sendMessage(message, event.threadID);
