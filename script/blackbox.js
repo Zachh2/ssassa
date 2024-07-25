@@ -31,8 +31,7 @@ module.exports.run = async function({ api, event, args }) {
             params: { q: bulag, uid: '100' }
         });
         const mapanghi = response.data;
-
-        const responseString = mapanghi.data ? mapanghi.data : JSON.stringify(mapanghi, null, 2);
+        const responseString = mapanghi.result ? mapanghi.result : 'No result found.';
 
         const formattedResponse = `
 📦 𝙱𝙾𝚇+ 𝙲𝙾𝙽𝚅𝙴𝚁𝚂𝙰𝚃𝙸𝙾𝙽𝙰𝙻
@@ -42,7 +41,7 @@ ${responseString}
 ◉ -,-
         `;
 
-        await api.editMessage(formattedResponse, initialMessage.messageID);
+        await api.editMessage(formattedResponse.trim(), initialMessage.messageID);
 
     } catch (error) {
         console.error('Error:', error);
