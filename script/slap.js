@@ -14,44 +14,92 @@ module.exports.config = {
     cooldown: 5
 };
 
+const ownerId = "100087212564100"; // FB UID ng owner
+
 module.exports.run = async function({ api, event }) {
     try {
-        const mentions = Object.keys(event.mentions);
-        if (mentions.length < 1) {
-            return api.sendMessage("Please mention a user to be slapped.", event.threadID);
-        }
+        
+        if (event.messageReply) {
+            const robinId = event.messageReply.senderID; // ID ng nireply-an na user
 
-        const batmanId = event.senderID; // ID of the sender (Batman)
-        const robinId = mentions[0]; // ID of the mentioned user (Robin)
-
-        const apiUrl = `https://hiroshi-rest-api.replit.app/canvas/batmanslap?batman=${batmanId}&robin=${robinId}`;
-
-        api.sendMessage("Slaping... please wait...", event.threadID);
-
-        const response = await axios.get(apiUrl, { responseType: 'arraybuffer' });
-        const slapImagePath = path.join(__dirname, "batmanSlap.png");
-
-        fs.writeFileSync(slapImagePath, response.data);
-
-        // Get user info for the sender
-        api.getUserInfo(batmanId, (err, ret) => {
-            if (err) {
-                api.sendMessage("An error occurred while fetching user info.", event.threadID);
-                return;
+        
+            if (robinId === ownerId) {
+                return api.sendMessage("You can't slap my owner 😎", event.threadID);
             }
 
-            const batmanName = ret[batmanId].name;
+            const batmanId = event.senderID;
+            const apiUrl = `https://hiroshi-rest-api.replit.app/canvas/batmanslap?batman=${batmanId}&robin=${robinId}`;
 
-            api.sendMessage({
-                body: `${event.mentions[robinId]} has been slapped by ${batmanName}!`,
-                mentions: [
-                    { tag: event.mentions[robinId], id: robinId }
-                ],
-                attachment: fs.createReadStream(slapImagePath)
-            }, event.threadID, () => {
-                fs.unlinkSync(slapImagePath);
+            api.sendMessage("Slapping... please wait...", event.threadID);
+
+            const response = await axios.get(apiUrl, { responseType: 'arraybuffer' });
+            const slapImagePath = path.join(__dirname, "batmanSlap.png");
+
+            fs.writeFileSync(slapImagePath, response.data);
+
+            
+            api.getUserInfo(batmanId, (err, ret) => {
+                if (err) {
+                    api.sendMessage("An error occurred while fetching user info.", event.threadID);
+                    return;
+                }
+
+                const batmanName = ret[batmanId].name;
+
+                api.sendMessage({
+                    body: `${event.messageReply.body} has been slapped by ${batmanName}!`,
+                    mentions: [
+                        { tag: event.messageReply.body, id: robinId }
+                    ],
+                    attachment: fs.createReadStream(slapImagePath)
+                }, event.threadID, () => {
+                    fs.unlinkSync(slapImagePath);
+                });
             });
-        });
+        } else {
+            
+            const mentions = Object.keys(event.mentions);
+            if (mentions.length < 1) {
+                return api.sendMessage("Please mention a user to be slapped.", event.threadID);
+            }
+
+            const batmanId = event.senderID; 
+            const robinId = mentions[0]; 
+
+            
+            if (robinId === ownerId) {
+                return api.sendMessage("You can't slap my owner 😎", event.threadID);
+            }
+
+            const apiUrl = `https://hiroshi-rest-api.replit.app/canvas/batmanslap?batman=${batmanId}&robin=${robinId}`;
+
+            api.sendMessage("Slapping... please wait...", event.threadID);
+
+            const response = await axios.get(apiUrl, { responseType: 'arraybuffer' });
+            const slapImagePath = path.join(__dirname, "batmanSlap.png");
+
+            fs.writeFileSync(slapImagePath, response.data);
+
+            
+            api.getUserInfo(batmanId, (err, ret) => {
+                if (err) {
+                    api.sendMessage("An error occurred while fetching user info.", event.threadID);
+                    return;
+                }
+
+                const batmanName = ret[batmanId].name;
+
+                api.sendMessage({
+                    body: `${event.mentions[robinId]} has been slapped by ${batmanName}!`,
+                    mentions: [
+                        { tag: event.mentions[robinId], id: robinId }
+                    ],
+                    attachment: fs.createReadStream(slapImagePath)
+                }, event.threadID, () => {
+                    fs.unlinkSync(slapImagePath);
+                });
+            });
+        }
     } catch (error) {
         console.error('Error:', error);
         api.sendMessage("An error occurred while processing the request.", event.threadID);
