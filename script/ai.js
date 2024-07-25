@@ -1,14 +1,14 @@
 const axios = require('axios');
 
 module.exports.config = {
-  name: 'ai',
+  name: 'ericson',
   version: '1.0.0',
   role: 0,
   hasPrefix: false,
-  aliases: ['ai'],
+  aliases: ['ericson'],
   description: "AI",
-  usage: "ai [prompt]",
-  credits: 'churchill',
+  usage: "ericdon [prompt]",
+  credits: 'ericson',
   cooldown: 3,
 };
 
@@ -22,7 +22,7 @@ module.exports.run = async function({ api, event, args }) {
   }
 
   const chill = await new Promise(resolve => {
-    api.sendMessage('🤖 𝘎𝘗𝘛4 𝘈𝘕𝘚𝘞𝘌𝘙𝘐𝘕𝘎...', event.threadID, (err, info) => {
+    api.sendMessage('🤖 ERICSON 𝘈𝘕𝘚𝘞𝘌𝘙𝘐𝘕𝘎...', event.threadID, (err, info) => {
       if (err) {
         console.error('Error sending message:', err);
         return;
@@ -52,7 +52,7 @@ module.exports.run = async function({ api, event, args }) {
       }
 
       const userName = ret[event.senderID].name;
-      const formattedResponse = `🤖 𝙶𝙿𝚃4+ 𝙲𝙾𝙽𝚃𝙸𝙽𝚄𝙴𝚂 𝙰𝙸
+      const formattedResponse = `🤖 ERICSON 𝙲𝙾𝙽𝚃𝙸𝙽𝚄𝙴𝚂 𝙰𝙸
 ━━━━━━━━━━━━━━━━━━
 ${aiResponse}
 ━━━━━━━━━━━━━━━━━━
