@@ -20,7 +20,7 @@ module.exports.run = async function ({ api, event, args }) {
 
         const emoji = args.join(" ");
 
-        api.sendMessage("Generating GIF, please wait...", event.threadID, async (err) => {
+        api.sendMessage("𝙲𝙾𝙽𝚅𝙴𝚁𝚃𝙸𝙽𝙶 𝙴𝙼𝙾𝙹𝙸 𝚃𝙾 𝙶𝙸𝙵...", event.threadID, async (err) => {
             if (err) {
                 console.error(err);
                 return api.sendMessage("An error occurred while processing your request.", event.threadID, event.messageID);
