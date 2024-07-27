@@ -1,78 +1,41 @@
 const axios = require('axios');
+const moment = require('moment-timezone');
 
 module.exports.config = {
-  name: 'ericson',
+  name: 'ai',
   version: '1.0.0',
   role: 0,
   hasPrefix: false,
-  aliases: ['ericson'],
-  description: "AI",
-  usage: "ericdon [prompt]",
-  credits: 'ericson',
+  aliases: ['gpt', 'openai'],
+  description: "An AI command powered by GPT-4",
+  usage: "Ai [promot]",
+  credits: 'Developer',
   cooldown: 3,
 };
 
 module.exports.run = async function({ api, event, args }) {
-  const prompt = args.join(" ");
-  const userID = "100";
+ const timeString = moment.tz('Asia/Manila').format('LLL');
+  const input = args.join(' ');
 
-  if (!prompt) {
-    api.sendMessage('Please provide a question ex: ai what is n1gga?', event.threadID, event.messageID);
+
+  
+  if (!input) {
+    api.shareContact(`Hello im Artifical Intelligence, please provide a question.`,api.getCurrentUserID(), event.threadID, event.messageID);
     return;
   }
+  api.setMessageReaction("⏳", event.messageID, (err) => {
+  }, true);
+api.sendTypingIndicator(event.threadID, true);
 
-  const chill = await new Promise(resolve => {
-    api.sendMessage('🤖 ERICSON 𝘈𝘕𝘚𝘞𝘌𝘙𝘐𝘕𝘎...', event.threadID, (err, info) => {
-      if (err) {
-        console.error('Error sending message:', err);
-        return;
-      }
-      api.setMessageReaction("⏳", info.messageID, (err) => {
-        if (err) console.error('Error setting reaction:', err);
-      });
-      resolve(info);
-    });
-  });
-
-  const apiUrl = `https://markdevs-last-api-as2j.onrender.com/gpt4?prompt=${encodeURIComponent(prompt)}&uid=${encodeURIComponent(userID)}`;
-
+  api.sendMessage(`🔍𝙎𝙚𝙖𝙧𝙘𝙝𝙞𝙣𝙜 𝙋𝙡𝙚𝙖𝙨𝙚 𝙒𝙖𝙞𝙩....
+━━━━━━━━━━━━━━━━━━\n\n "${input}"`,event.threadID, event.messageID);
+  
   try {
-    const startTime = Date.now();
-    const hot = await axios.get(apiUrl);
-    const result = hot.data;
-    const aiResponse = result.gpt4;
-    const endTime = Date.now();
-    const responseTime = ((endTime - startTime) / 1000).toFixed(2);
-
-    api.getUserInfo(event.senderID, async (err, ret) => {
-      if (err) {
-        console.error('Error fetching user info:', err);
-        await api.editMessage('Error fetching user info.', chill.messageID);
-        return;
-      }
-
-      const userName = ret[event.senderID].name;
-      const formattedResponse = `🤖 ERICSON 𝙲𝙾𝙽𝚃𝙸𝙽𝚄𝙴𝚂 𝙰𝙸
-━━━━━━━━━━━━━━━━━━
-${aiResponse}
-━━━━━━━━━━━━━━━━━━
-🗣 Asked by: ${userName}
-⏰ Respond Time: ${responseTime}s
-━━━━━━━━━━━━━━━━━━
-𝙸𝚏 𝚎𝚛𝚛𝚘𝚛 𝚃𝚛𝚢 𝚄𝚜𝚎 "𝙶𝙿𝚃4" 𝙲𝙼𝙳`;
-
-      try {
-        await api.editMessage(formattedResponse, chill.messageID);
-        api.setMessageReaction("✅", chill.messageID, (err) => {
-          if (err) console.error('Error setting reaction:', err);
-        });
-      } catch (error) {
-        console.error('Error editing message:', error);
-        api.sendMessage('Error editing message: ' + error.message, event.threadID, event.messageID);
-      }
-    });
+    const { data } = await axios.get(`https://openaikey-x20f.onrender.com/api?prompt=${encodeURIComponent(input)}`);
+    let response = data.response;
+    response += `\n\n${timeString}`;
+    api.sendMessage(response, event.threadID, event.messageID);
   } catch (error) {
-    console.error('Error:', error);
-    await api.editMessage('Error: ' + error.message, chill.messageID);
+    api.sendMessage('An error occurred while processing your request.', event.threadID, event.messageID);
   }
 };
