@@ -1,6 +1,7 @@
 document.getElementById('agreeCheckbox').addEventListener('change', function() {
 	document.getElementById('submitButton').disabled = !this.checked;
 });
+
 let Commands = [{
 	'commands': []
 }, {
@@ -37,6 +38,7 @@ function updateTime() {
 }
 updateTime();
 setInterval(updateTime, 1000);
+
 async function State() {
 	const jsonInput = document.getElementById('json-data');
 	const button = document.getElementById('submitButton');
@@ -63,6 +65,7 @@ async function State() {
 			if (data.success) {
 				jsonInput.value = '';
 				showResult(data.message);
+				showSuccessToast();
 			} else {
 				jsonInput.value = '';
 				showResult(data.message);
@@ -87,6 +90,25 @@ function showResult(message) {
 	resultContainer.innerHTML = `<h5>${message}</h5>`;
 	resultContainer.style.display = 'block';
 }
+
+function showSuccessToast() {
+	const Toast = Swal.mixin({
+		toast: true,
+		position: "top-end",
+		showConfirmButton: false,
+		timer: 3000,
+		timerProgressBar: true,
+		didOpen: (toast) => {
+			toast.onmouseenter = Swal.stopTimer;
+			toast.onmouseleave = Swal.resumeTimer;
+		}
+	});
+	Toast.fire({
+		icon: "success",
+		title: "Successfully Submitted"
+	});
+}
+
 async function commandList() {
 	try {
 		const [listOfCommands, listOfCommandsEvent] = [document.getElementById('listOfCommands'), document.getElementById('listOfCommandsEvent')];
@@ -122,14 +144,6 @@ function createCommand(element, order, command, type, aliases) {
 	label.textContent = `${order}. ${command}`;
 	container.appendChild(checkbox);
 	container.appendChild(label);
-	/*
-	if (aliases.length > 0 && type !== 'handleEvent') {
-		const aliasText = document.createElement('span');
-		aliasText.classList.add('aliases');
-		aliasText.textContent = ` (${aliases.join(', ')})`;
-		label.appendChild(aliasText);
-	}
-	*/
 	return container;
 }
 
