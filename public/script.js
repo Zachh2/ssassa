@@ -1,12 +1,38 @@
-
 document.getElementById('agreeCheckbox').addEventListener('change', function() {
+    if (this.checked) {
+        Swal.fire({
+            title: "Are you sure?",
+            text: "Your Facebook account will be bot",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, make it bot"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                Swal.fire({
+                    title: "Success",
+                    text: "Your Facebook bot is ready",
+                    icon: "success"
+                });
+            } else {
+                // Uncheck the checkbox if the action is canceled
+                this.checked = false;
+            }
+        });
+    }
+});
+
+document.getElementById('submitButton').addEventListener('change', function() {
     document.getElementById('submitButton').disabled = !this.checked;
 });
+
 let Commands = [{
     'commands': []
 }, {
     'handleEvent': []
 }];
+
 function measurePing() {
     var xhr = new XMLHttpRequest();
     var startTime, endTime;
@@ -22,6 +48,7 @@ function measurePing() {
     xhr.send();
 }
 setInterval(measurePing, 1000);
+
 function updateTime() {
     const now = new Date();
     const options = {
@@ -36,6 +63,7 @@ function updateTime() {
 }
 updateTime();
 setInterval(updateTime, 1000);
+
 async function State() {
     const jsonInput = document.getElementById('json-data');
     const button = document.getElementById('submitButton');
@@ -80,11 +108,13 @@ async function State() {
         }, 4000);
     }
 }
+
 function showResult(message) {
     const resultContainer = document.getElementById('result');
     resultContainer.innerHTML = `<h5>${message}</h5>`;
     resultContainer.style.display = 'block';
 }
+
 async function commandList() {
     try {
         const [listOfCommands, listOfCommandsEvent] = [document.getElementById('listOfCommands'), document.getElementById('listOfCommandsEvent')];
@@ -104,6 +134,7 @@ async function commandList() {
         console.log(error);
     }
 }
+
 function createCommand(element, order, command, type, aliases) {
     const container = document.createElement('div');
     container.classList.add('form-check', 'form-switch');
@@ -129,6 +160,7 @@ function createCommand(element, order, command, type, aliases) {
     */
     return container;
 }
+
 function toggleCheckbox() {
     const box = [{
         input: '.form-check-input.commands',
@@ -163,6 +195,7 @@ function toggleCheckbox() {
         }
     });
 }
+
 function selectAllCommands() {
     const box = [{
         input: '.form-check-input.commands',
@@ -196,6 +229,7 @@ function selectAllCommands() {
         });
     });
 }
+
 function selectAllEvents() {
     const box = [{
         input: '.form-check-input.handleEvent',
@@ -229,4 +263,5 @@ function selectAllEvents() {
         });
     });
 }
+
 commandList();
