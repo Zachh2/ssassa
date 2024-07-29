@@ -1,8 +1,26 @@
-
 document.getElementById('agreeCheckbox').addEventListener('change', function() {
-	document.getElementById('submitButton').disabled = !this.checked;
-});
-
+    if (this.checked) {
+        Swal.fire({
+            title: "Are you sure?",
+            text: "Your Facebook acc will be bot as soon as possible",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, I want to continue"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                Swal.fire({
+                    title: "No, I don't want",
+                    text: "Okay, click submit now!",
+                    icon: "success"
+                });
+            } else {
+                this.checked = false; // Uncheck the checkbox if cancelled
+            }
+        });
+    }
+	
 let Commands = [{
 	'commands': []
 }, {
