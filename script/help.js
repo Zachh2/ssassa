@@ -72,7 +72,7 @@ module.exports.run = async function ({
 }) {
 	api.setMessageReaction("⏳", event.messageID, (err) => {
 	}, true);
-  api.sendTypingIndicator(event.threadID, true);
+}
 	const input = args.join(' ');
 	try {
 		const eventCommands = enableCommands[1].handleEvent;
