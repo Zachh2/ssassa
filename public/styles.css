@@ -2,9 +2,9 @@ body {
     margin: 0;
     padding: 0;
     font-family: 'Poppins', BlinkMacSystemFont, sans-serif;
-    overflow-y: auto;
-    overflow-x: hidden;
-    background: linear-gradient(315deg, rgb(255, 182, 193) 3%, rgb(255, 105, 180), rgba(255, 192, 203, 1) 68%, rgb(255, 240, 245) 98%);
+    overflow-y: auto; /* Enable vertical scrolling */
+    overflow-x: hidden; /* Hide horizontal scrollbar */
+    background: linear-gradient(315deg, rgb(0, 0, 0) 3%, rgb(68, 152, 255), rgba(48, 238, 226, 1) 68%, rgb(239, 239, 239) 98%);
     animation: gradient 15s ease infinite;
     background-size: 400% 400%;
     background-attachment: fixed;
@@ -23,7 +23,7 @@ body {
 }
 
 .wave {
-    background: rgba(255, 182, 193, 0.25);
+    background: rgba(255, 255, 255, 0.25);
     border-radius: 1000% 1000% 0 0;
     position: fixed;
     width: 200%;
@@ -68,27 +68,28 @@ body {
 
 .container {
     color: #fff;
-    background: rgba(255, 192, 203, 0.8);
+    background: rgba(0, 0, 0, 0.8);
     border-radius: 10px;
     padding: 20px;
-    box-shadow: 0 0 .2rem #ff69b4, 0 0 .2rem #ff1493, 0 0 2rem #ff69b4, 0 0 0.8rem #ff1493, 0 0 2.8rem #ff69b4, inset 0 0 1.3rem #ff69b4;
+    box-shadow: 0 0 .2rem #000000, 0 0 .2rem #1b84b5, 0 0 2rem #0000f5, 0 0 0.8rem #1F51FF, 0 0 2.8rem #000000, inset 0 0 1.3rem #3e81ef;
     margin-top: 20px;
     margin-bottom: 20px;
-    outline: 2px solid #ff1493;
+    outline: 2px solid #fff;
 }
 
 h1 {
-    color: #ff1493;
+    color: #fff;
     font-size: 24px;
     margin-bottom: 15px;
 }
 
 label {
-    background-color: #ff69b4;
-    color: #fff;
+    background-color: #fff;
+    color: #343434;
     border-radius: 10px;
     font-weight: bold;
     margin-bottom: 5px;
+    background-image: #fff;
 }
 
 .centered-textarea {
@@ -99,35 +100,35 @@ label {
     min-height: 150px;
     padding: 10px;
     box-sizing: border-box;
-    border: 1px solid #ff1493;
+    border: 1px solid #178fdf;
     border-radius: 5px;
     resize: none;
 }
 
 .btn-primary {
-    background-color: #ff69b4;
-    border: 1px solid #ff1493;
-    color: #fff;
+    background-color: #3ee2ff;
+    border: 1px solid #00c3ff;
+    color: #261a1a;
 }
 
 .btn-primary:hover {
-    background-color: #ff1493;
-    border: 1px solid #ff69b4;
+    background-color: #46c8ff;
+    border: 1px solid #00e5ff;
 }
 
 .success-message {
-    color: #32cd32;
+    color: green;
     margin-top: 10px;
 }
 
 .footer {
-    background-color: #ff69b4;
+    background-color: #00ffea 46%, #1286c1 100%;
     padding: 10px;
     text-align: center;
     font-size: 16px;
     color: #fff;
     margin-top: 50px;
-    border-top: 1px solid #ff1493;
+    border-top: 1px solid #blue;
     position: fixed;
     bottom: 0;
     left: 0;
@@ -164,17 +165,17 @@ label {
     margin-top: 10px;
     padding: 14px;
     align-items: center;
-    border: 1px solid #ff1493;
+    border: 1px solid #red;
     border-radius: 8px;
     cursor: pointer;
     transition: background-color 0.3s ease, border-color 0.3s ease;
-    border-color: #ff1493;
+    border-color: #ccc;
     background-color: #fff;
 }
 
 .form-check:hover {
-    background-color: #ffe4e1;
-    border-color: #ff1493;
+    background-color: #f5f5;
+    border-color: #ff00bf;
 }
 
 .form-check-input {
@@ -191,12 +192,12 @@ label {
 #inputOfBotName {
     padding: 13px;
     width: 200px;
-    border: 1px solid #ff1493;
+    border: 1px solid #000000;
     border-radius: 8px;
     cursor: pointer;
     transition: background-color 0.3s ease, border-color 0.3s ease;
-    border-color: #ff1493;
-    background-color: #fff;
+    border-color: #000000;
+    background-color: #ffffff;
 }
 
 #listOfCommands,
@@ -207,9 +208,8 @@ label {
 }
 
 #listOfCommands:not(.modal), #listOfCommandsEvent:not(.modal), #prefixOfCommands:not(.modal), #adminOfCommands:not(.modal) {
-    box-shadow: 0 10px 20px rgba(255, 105, 180, 0.3), 0 6px 6px rgba(255, 105, 180, 0.23);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3), 0 6px 6px rgba(0, 0, 0, 0.23);
 }
-
 #listOfCommandsEvent:not(.modal),
 #prefixOfCommands:not(.modal),
 #adminOfCommands:not(.modal) {
@@ -226,8 +226,8 @@ video {
     max-height: 40%;
     margin-bottom: 20px;
     cursor: default;
-    outline: 2px solid #ff1493;
-    background: linear-gradient(135deg, #ffb6c1, #ff69b4, #ff1493, #ffb6c1);
+    outline: 2px solid #fff;
+    background: linear-gradient(135deg, aqua, rgb(0, 255, 0), rgb(255, 255, 0), rgb(0, 0, 0), rgb(239, 239, 239), rgb(255, 0, 234));
     border-radius: 10px;
     animation: animate 1.5s linear infinite;
     border: 2px solid transparent;
@@ -236,12 +236,12 @@ video {
 
 @keyframes neon-border {
     from {
-        border-color: #ff1493;
-        box-shadow: 0 0 10px #ff69b4, 0 0 20px #ff1493, 0 0 30px #ff1493;
+        border-color: #0080ff;
+        box-shadow: 0 0 10px #00c8ff, 0 0 20px #00a2ff, 0 0 30px #0080ff;
     }
     to {
-        border-color: #ffb6c1;
-        box-shadow: 0 0 20px #ffb6c1, 0 0 40px #ff69b4, 0 0 60px #ff1493;
+        border-color: #0da2ff;
+        box-shadow: 0 0 20px #2ec0ff, 0 0 40px #4891ff, 0 0 60px #44f3ff;
     }
 }
 
@@ -263,7 +263,6 @@ video {
     object-fit: cover;
     margin: auto;
 }
-
 #json-data {
     background-image: url('https://i.ibb.co/hffhZhD/438312467.jpg');
     background-size: cover;
