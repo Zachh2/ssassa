@@ -1,42 +1,57 @@
-const axios = require("axios");
+const axios = require('axios');
 
 module.exports.config = {
-    name: "ai2",
-    version: "1.0.0",
-    credits: "chill",
-    description: "Interact with Llama AI",
-    hasPrefix: false,
-    cooldown: 5,
-    aliases: ["llama"]
+  name: 'ai2',
+  version: '1.0.5',
+  role: 0,
+  hasPrefix: false,
+  aliases: ['gpt', 'openai'],
+  description: "An AI command powered by GPT-4",
+  usage: "Ai [question]",
+  credits: 'Developer',
+  cooldown: 3,
 };
 
-module.exports.run = async function ({ api, event, args }) {
-    try {
-        let q = args.join(" ");
-        if (!q) {
-            return api.sendMessage("[ ❗ ] - Missing question for the ai2", event.threadID, event.messageID);
-        }
+module.exports.run = async function({ api, event, args }) {
+  const Prefixes = ['ai2', 'ask', 'gpt', 'openai', '@ai']; // put here your AI names
 
-        const initialMessage = await new Promise((resolve, reject) => {
-            api.sendMessage("Answering plss wait...", event.threadID, (err, info) => {
-                if (err) return reject(err);
-                resolve(info);
-            });
-        });
+  const prefix = Prefixes.find(p => event.body.toLowerCase().startsWith(p));
+  if (!prefix) return;
 
-        try {
-            const response = await axios.get(`https://joshweb.click/ai/llama-3-8b?q=${encodeURIComponent(q)}&uid=100`);
-            const answer = response.data.result;
+  const question = event.body.slice(prefix.length).trim();
+  if (!question) {
+    api.sendMessage(`❓ It looks like you didn't provide a question. Please include a question after the command so I can assist you.`, event.threadID, event.messageID);
+    return;
+  }
 
-            const formattedResponse = `👾 Iᒪᒪᗰᗩ\n━━━━━━━━━━━━━━━━━━\n${answer}\n━━━━━━━━━━━━━━━━━━`;
+  const uid = event.senderID;
 
-            await api.editMessage(formattedResponse, initialMessage.messageID);
-        } catch (error) {
-            console.error(error);
-            await api.editMessage("An error occurred while processing your request.", initialMessage.messageID);
-        }
-    } catch (error) {
-        console.error("Error in ai2 command:", error);
-        api.sendMessage("An error occurred while processing your request.", event.threadID);
+  api.setMessageReaction("⏰", event.messageID, (err) => {
+  }, true);
+  api.sendTypingIndicator(event.threadID, true);
+
+  try {
+    const response = await axios.get(`https://king-aryanapis.onrender.com/gts/smile`, {
+      params: { uid, question }
+    });
+
+    if (response.status!== 200 ||!response.data) {
+      throw new Error('Invalid or missing response from API');
     }
+
+    const answer = response.data.response;
+    const processTimeSec = ((Date.now() - event.timestamp) / 1000).toFixed(2);
+
+    if (event.isReply) {
+      // Handle follow-up conversation
+      const originalMessage = await api.getMessage(event.threadID, event.replyTo);
+      const originalQuestion = originalMessage.body;
+      api.sendMessage(`📒 𝗤𝘂𝗲𝘀𝘁𝗶𝗼𝗻: ${originalQuestion}\n━━━━━━━━━━━━━\n\n✅ 𝗔𝗻𝘀𝘄𝗲𝗿: ${answer}\n\n━━━━━━━━━━━━━\n𝗣𝗿𝗼𝗰𝗲𝘀𝘀 𝗧𝗶𝗺𝗲: ${processTimeSec} seconds`, event.threadID, event.messageID);
+    } else {
+      api.sendMessage(`📒 𝗤𝘂𝗲𝘀𝘁𝗶𝗼𝗻: ${question}\n━━━━━━━━━━━━━\n\n✅ 𝗔𝗻𝘀𝘄𝗲𝗿: ${answer}\n\n━━━━━━━━━━━━━\n𝗣𝗿𝗼𝗰𝗲𝘀𝘀 𝗧𝗶𝗺𝗲: ${processTimeSec} seconds`, event.threadID, event.messageID);
+    }
+
+  } catch (error) {
+    api.sendMessage(`⚠️ An error occurred while processing your request. Error: ${error.message}${error.response? `, Status Code: ${error.response.status}` : ''}. Please try again later.`, event.threadID, event.messageID);
+  }
 };
