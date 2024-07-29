@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>ChatBotV5</title>
+    <title>ChatBotV1</title>
     <link href='https://i.imgur.com/dUZxyj3.jpeg' rel='shortcut icon' type='image/x-icon'/>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -64,7 +64,7 @@
         <button class="btn btn-primary" onclick="selectAllCommands()">Select all commands</button>
     </div>
     <div class="container" id="listOfCommandsEvent">
-        <h1 style="font-size: 16px; padding: 10px;">𝗣𝗹𝗲𝗮𝘀𝗲 𝗰𝗵𝗼𝗼𝘀𝗲 𝘆𝗼𝘂𝗿 𝗲𝘃𝗲𝗻𝘁 𝗰𝗼𝗺𝗺𝗮𝗻𝗱𝘀 𝗯𝘆 𝘁𝗮𝗽𝗽𝗶𝗻𝗴 𝗼𝗻 𝘁𝗵𝗲 𝗿𝗲𝗽𝗲𝗰𝘁𝗶𝘃𝗲 𝗼𝗽𝘁𝗶𝗼𝗻𝘀.</h1>
+        <h1 style="font-size: 16px; padding: 10px;">𝗣𝗹𝗲𝗮𝘀𝗲 𝗰𝗵𝗼𝗼𝘀𝗲 𝘆𝗼𝘂𝗿 𝗲𝘃𝗲𝗻𝘁 𝗰𝗼𝗺𝗺𝗮𝗻𝗱𝘀 𝗯𝘆 𝘁𝗮𝗽𝗽𝗶𝗻𝗴 𝗼𝗻 𝘁𝗵𝗲 𝗿𝗲𝘀𝗽𝗲𝗰𝘁𝗶𝘃𝗲 𝗼𝗽𝘁𝗶𝗼𝗻𝘀.</h1>
         <button class="btn btn-primary" onclick="selectAllEvents()">Select all events</button>
     </div>
     <div class="container" id="prefixOfCommands">
@@ -79,7 +79,7 @@
         <input type="checkbox" id="agreeCheckbox" style="color: #FFF; margin-right: 10px;"> Checking this box certifies that I have read, understood, and agreed to the Terms and Conditions. 
     </label>
     <div class="col text-center">
-        <button class="btn btn-primary" onclick="submitForm()" id="submitButton" style="width: 100%">Submit</button>
+        <button class="btn btn-primary" onclick="handleSubmit()" disabled id="submitButton" style="width: 100%">Submit</button>
     </div>
     <div id="result" class="container text-center" style="display: none;"></div>
     <div class="footer">
@@ -110,29 +110,33 @@
         });
 
         document.getElementById('agreeCheckbox').addEventListener('change', function() {
+            const submitButton = document.getElementById('submitButton');
             if (this.checked) {
-                Swal.fire({
-                    title: "Are you sure?",
-                    text: "Your Facebook account will be bot",
-                    icon: "warning",
-                    showCancelButton: true,
-                    confirmButtonColor: "#3085d6",
-                    cancelButtonColor: "#d33",
-                    confirmButtonText: "Yes, make it bot"
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        Swal.fire({
-                            title: "Success",
-                            text: "Your Facebook bot is ready, click submit",
-                            icon: "success"
-                        });
-                    } else {
-                        this.checked = false; // Uncheck the checkbox if cancelled
-                    }
-                });
+                submitButton.disabled = false;
+            } else {
+                submitButton.disabled = true;
             }
         });
-    
+
+        function handleSubmit() {
+            Swal.fire({
+                title: "Are you sure?",
+                text: "Your Facebook account will be bot",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Yes, make it bot"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire({
+                        title: "Success",
+                        text: "Your Facebook bot is ready",
+                        icon: "success"
+                    });
+                }
+            });
+        }
     </script>
 </body>
 </html>
